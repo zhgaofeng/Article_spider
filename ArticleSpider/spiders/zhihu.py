@@ -52,7 +52,7 @@ class ZhihuSpider(scrapy.Spider):
             question_id = match_obj.group(2)
         item_loader = ItemLoader(item=ZhihuQuestionItem(), response=response)
         item_loader.add_css('title', '.QuestionHeader-title::text') # css没有或 用xpath
-        # item_loader.add_xpath('title', '//*[@class="QuestionHeader-title"]/h2/a/text()|//*[@class="QuestionHeader-title"]/h2/span/text()')
+        # item_loader.add_xpath('title', '//*[@id="QuestionHeader-title"]/h2/a/text()|//*[@id="QuestionHeader-title"]/h2/span/text()')
         item_loader.add_css('content', '.QuestionHeader-detail')
         item_loader.add_value('url', response.url)
         item_loader.add_value('zhihu_id', question_id)

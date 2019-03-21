@@ -86,11 +86,9 @@ class MysqlTwistedPipeline(object):
         query.addErrback(self.handle_error, item, spider)
 
     def do_insert(self, cursor, item):
-        insert_sql = '''
-                    insert into article(url_object_id, title, url, content, create_date,write_nums)
-                    VALUES(%s, %s, %s, %s, %s, %s)
-                '''
-        cursor.execute(insert_sql, (item["url_object_id"], item["title"], item["url"], item["content"], item["create_date"], item["write_nums"]))
+        insert_sql, params = item.get_insert_sql()
+
+        cursor.execute(insert_sql, params)
 
     def handle_error(self, failure, item, spider):
         print(failure)
