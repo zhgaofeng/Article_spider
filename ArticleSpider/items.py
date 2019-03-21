@@ -77,3 +77,28 @@ class JobboleArticleItem(scrapy.Item):
     url_object_id = scrapy.Field()
     front_image_path = scrapy.Field()
 
+
+class ZhihuQuestionItem(scrapy.Item):
+    zhihu_id = scrapy.Field()
+    topic = scrapy.Field()
+    url = scrapy.Field()
+    title = scrapy.Field()
+    content = scrapy.Field()
+    answer_num = scrapy.Field()
+    comments_num = scrapy.Field()
+    watch_user_num = scrapy.Field()
+    click_num = scrapy.Field()
+    crawl_time = scrapy.Field()
+
+
+class ZhihuAnswerItem(scrapy.Item):
+    zhihu_id = scrapy.Field()
+    url = scrapy.Field()
+    question_id = scrapy.Field()
+    author_id = scrapy.Field()
+    content = scrapy.Field()
+    praise_num = scrapy.Field()
+    comments_num = scrapy.Field()
+    create_date = scrapy.Field()
+    update_date = scrapy.Field()
+    crawl_time = scrapy.Field()
