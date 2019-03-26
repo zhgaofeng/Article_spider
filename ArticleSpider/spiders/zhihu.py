@@ -7,6 +7,7 @@ import base64
 import re
 import json
 import datetime
+import random
 
 
 from selenium.webdriver.chrome.options import Options
@@ -20,6 +21,7 @@ except:
     from urllib import parse
 from scrapy.loader import ItemLoader
 from ArticleSpider.items import ZhihuQuestionItem, ZhihuAnswerItem
+from ArticleSpider.settings import user_agent_list
 
 
 class ZhihuSpider(scrapy.Spider):
@@ -27,10 +29,16 @@ class ZhihuSpider(scrapy.Spider):
     allowed_domains = ['www.zhihu.com']
     start_urls = ['https://www.zhihu.com']
     start_answer_url = ['https://www.zhihu.com/api/v4/questions/{0}/answers?include=data[*].is_normal,admin_closed_comment,reward_info,is_collapsed,annotation_action,annotation_detail,collapse_reason,is_sticky,collapsed_by,suggest_edit,comment_count,can_comment,content,editable_content,voteup_count,reshipment_settings,comment_permission,created_time,updated_time,review_info,relevant_info,question,excerpt,relationship.is_authorized,is_author,voting,is_thanked,is_nothelp,is_labeled,is_recognized;data[*].mark_infos[*].url;data[*].author.follower_count,badge[*].topics&limit={1}&offset={2}&platform=desktop&sort_by=default']
+    random_index = random.randint(0, len(user_agent_list)-1)
+    random_agent = user_agent_list[random_index]
     headers = {
         'HOST': 'www.zhihu.com',
         'Referer': 'https:www.zhihu.com',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36'
+        'User-Agent': random_agent
+    }
+
+    custom_settings = {
+        'COOKIES_ENABLED': True
     }
 
     def parse(self, response):
@@ -41,6 +49,9 @@ class ZhihuSpider(scrapy.Spider):
             match_obj = re.match('.*zhihu.com/question/(\d+)(/|$).*', url)
             if match_obj:
                 request_url = match_obj.group(1)
+                random_index = random.randint(0, len(user_agent_list) - 1)
+                random_agent = user_agent_list[random_index]
+                self.headers['User-Agent'] = random_agent
                 yield scrapy.Request(request_url, headers=self.headers, callback=self.parse_question)
             else:
                 yield scrapy.Request(url, headers=self.headers, callback=self.parse)

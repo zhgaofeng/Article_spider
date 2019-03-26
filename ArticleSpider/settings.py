@@ -30,14 +30,14 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 10
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
-COOKIES_ENABLED = True
+COOKIES_ENABLED = False
 COOKIES_DEBUG = True
 
 # Disable Telnet Console (enabled by default)
@@ -51,15 +51,17 @@ COOKIES_DEBUG = True
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'ArticleSpider.middlewares.ArticlespiderSpiderMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+    'ArticleSpider.middlewares.ArticlespiderSpiderMiddleware': 543,
+}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     # 'ArticleSpider.middlewares.ArticlespiderDownloaderMiddleware': 543,
-    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 2,
+    # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 2,
+    # 'scrapy.downloadermiddlewares.RandomUserAgentMiddleware': 543,
+    'ArticleSpider.middlewares.JSPageMiddleware': 543,
 }
 
 # Enable or disable extensions
@@ -74,7 +76,8 @@ ITEM_PIPELINES = {
     # 'ArticleSpider.pipelines.JonsExporterPipleline': 2,
     # # 'scrapy.pipelines.images.ImagesPipeline': 1,
     # 'ArticleSpider.pipelines.ArticleImagePipeline': 1,
-    'ArticleSpider.pipelines.MysqlTwistedPipeline': 1,
+    # 'ArticleSpider.pipelines.MysqlTwistedPipeline': 1,
+    'ArticleSpider.pipelines.ElasticsearchPipeline': 1,
 }
 IMAGES_URLS_FIELD = "front_img_url"
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -107,6 +110,12 @@ IMAGES_STORE = os.path.join(PROJECT_DIR, 'images')
 BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'ArticleSpider'))
 
+user_agent_list = [
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36',
+
+]
+
+RANDOM_UA_TYPE = 'random'
 
 MYSQL_HOST = '127.0.0.1'
 MYSQL_DBNAME = 'scrapyspider'

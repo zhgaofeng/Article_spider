@@ -8,12 +8,24 @@ from scrapy.loader import ItemLoader
 
 from ArticleSpider.items import JobboleArticleItem, ArticleItemLoader
 from ArticleSpider.utils.common import get_md5
+from selenium import webdriver
+from scrapy.xlib.pydispatch import dispatcher
+from scrapy import signals
 
 
 class JobboleSpider(scrapy.Spider):
     name = 'jobbole'
     allowed_domains = ['blog.jobbole.com']
     start_urls = ['http://blog.jobbole.com/all-posts/']
+
+    def __init__(self):
+        self.browser = webdriver.Chrome(executable_path='/home/zgf/chromedirver')
+        super(JobboleSpider, self).__init__()
+        dispatcher.connect(self.spider_closed, signals.spider_closed)
+
+    def spider_closed(self, spider):
+        # 当爬虫退出的时候退出browser
+        self.browser.quit()
 
     def parse(self, response):
         # 获取下一页的url并且交给scrapy进行下载
